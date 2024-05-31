@@ -23,3 +23,30 @@ exports.postExampe = async (req, res) => {
     return res.status(200).json(POSTEXAMPLE);
   }
 };
+
+exports.getExamples = async (req, res) => {
+  const getDetails = await Example.findAll();
+  if (getDetails) {
+    return res.status(200).json(getDetails);
+  }
+};
+
+exports.deleteExample = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const userToDelete = await Example.findByPk(id);
+    if (userToDelete) {
+      await userToDelete.destroy();
+      return res
+        .status(200)
+        .json({ message: "Successfully deleted", deletedUser: userToDelete });
+    } else {
+      return res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Failed to delete user", error: error.message });
+  }
+};
